@@ -18,14 +18,14 @@ class GEvent {
     this.listeners.push(handler)
   }
 
-  trigger(data) {
+  trigger(args) {
     const listeners = this.getListeners()
     if (listeners.length === 0) {
       return false
     }
     for (let i = 0; i < listeners.length; i++) {
       const listener = listeners[i]
-      typeof listener === 'function' && listener.call(this, data)
+      typeof listener === 'function' && listener.apply(this, args)
     }
   }
 

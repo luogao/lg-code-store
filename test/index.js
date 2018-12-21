@@ -2,26 +2,20 @@ import GEventEmitter from '../src/eventEmitter'
 
 const GEE = new GEventEmitter()
 
-const event1 = GEE._add('23')
+const listenerRemoved = function(...res) {
+  console.log('will be removed after emitted', res)
+}
 
-GEE.addEventListener('23', function() {
-  console.log(this.name)
-})
-
-event1.addListener(function(data) {
-  console.log('ceshi', data)
-})
-
-const listenerRemoved = function() {
-  console.log('will be removed after emitted')
+const listenerOnce = function(data, data1) {
+  console.log('will only run once', data, data1)
 }
 
 GEE.on('testRemove', listenerRemoved)
-GEE.on('testRemove', listenerRemoved)
-GEE.on('testRemove', listenerRemoved)
-GEE.on('testRemove', listenerRemoved)
-GEE.on('testRemove', listenerRemoved)
-GEE.on('testRemove', listenerRemoved)
+GEE.on('normalEvent', function(a, b, c, d, e) {
+  console.log(a, b, c, d, e)
+})
+
+GEE.once('testOnce', listenerOnce)
 
 console.log('All Events ', GEE.getEventNames())
 console.log(GEE)
@@ -29,7 +23,8 @@ console.log(GEE)
 const testBtn = document.querySelector('.btn')
 
 testBtn.addEventListener('click', function() {
-  GEE.emit('23')
-  GEE.emit('testRemove')
+  GEE.emit('testRemove', {}, 123, 13, 4324352345)
+  GEE.emit('testOnce', 123, 123)
+  GEE.emit('normalEvent', 1, 2, 3, 4, 5)
   GEE.removeListener('testRemove', listenerRemoved)
 })

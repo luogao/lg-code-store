@@ -41,6 +41,15 @@ class GEventEmitter {
     event.addListener(handler)
   }
 
+  once(eventName, handler) {
+    const self = this
+    function fn(...arg) {
+      handler.apply(self, arg)
+      self.removeListener(eventName, fn)
+    }
+    self.on(eventName, fn)
+  }
+
   on(eventName, handler) {
     if (typeof handler !== 'function')
       throw new TypeError('"listener" argument must be a function')
@@ -48,12 +57,13 @@ class GEventEmitter {
     this._add(eventName).addListener(handler)
   }
 
-  emit(eventName, data) {
+  emit() {
+    const eventName = Array.prototype.shift.call(arguments)
     const event = this._getEvent(eventName)
     if (!event) {
       return false
     }
-    event.trigger(data)
+    event.trigger(arguments)
   }
 
   removeListener(eventName, handler) {
